@@ -317,7 +317,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#E1D4C2] text-[#291C0E] font-space relative overflow-x-hidden selection:bg-[#291C0E] selection:text-[#E1D4C2] flex flex-col justify-between p-4 sm:p-8 lg:p-12">
+    <div className="min-h-screen bg-[#D8CCC4] text-[#291C0E] font-space relative overflow-x-hidden selection:bg-[#291C0E] selection:text-[#D8CCC4] flex flex-col justify-between p-4 sm:p-8 lg:p-12">
       <EditorialStyles />
 
       {/* Background */}
