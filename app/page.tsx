@@ -1,24 +1,48 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Bebas_Neue, Instrument_Serif, Space_Grotesk } from 'next/font/google';
+
+const bebasNeue = Bebas_Neue({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-bebas',
+  display: 'swap',
+});
+
+const instrumentSerif = Instrument_Serif({
+  weight: '400',
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-space',
+  display: 'swap',
+});
 
 const EditorialStyles = () => (
   <style jsx global>{`
-    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;500;700&display=swap');
-
     .font-bebas {
-      font-family: 'Bebas Neue', sans-serif;
+      font-family: var(--font-bebas), sans-serif;
     }
     .font-space {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: var(--font-space), sans-serif;
     }
     .font-serif-italic {
-      font-family: 'Instrument Serif', serif;
+      font-family: var(--font-serif), serif;
       font-style: italic;
     }
 
-    .bg-grain {
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.06'/%3E%3C/svg%3E");
+    .bg-grain-optimized {
+      background-image: 
+        radial-gradient(rgba(41, 28, 14, 0.08) 1px, transparent 0),
+        radial-gradient(rgba(41, 28, 14, 0.08) 1px, transparent 0);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
     }
 
     .writing-mode-vertical {
@@ -54,18 +78,20 @@ const EditorialStyles = () => (
     }
 
     @keyframes logoLoopScrollLeft {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-50%, 0, 0); }
     }
     @keyframes logoLoopScrollRight {
-      0% { transform: translateX(-50%); }
-      100% { transform: translateX(0); }
+      0% { transform: translate3d(-50%, 0, 0); }
+      100% { transform: translate3d(0, 0, 0); }
     }
     .animate-logo-loop-left {
       animation: logoLoopScrollLeft 22s linear infinite;
+      will-change: transform;
     }
     .animate-logo-loop-right {
       animation: logoLoopScrollRight 22s linear infinite;
+      will-change: transform;
     }
     .animate-logo-loop-left:hover,
     .animate-logo-loop-right:hover {
@@ -148,7 +174,7 @@ const TechIcons = [
     ),
   },
   {
-    name: 'Figma', 
+    name: 'Figma',
     svg: (
       <svg className="w-10 h-10 sm:w-14 sm:h-14 fill-current" viewBox="0 0 38 57" xmlns="http://www.w3.org/2000/svg">
         <path d="M19 28.5C19 33.7467 14.7467 38 9.5 38C4.25329 38 0 33.7467 0 28.5C0 23.2533 4.25329 19 9.5 19H19V28.5Z" />
@@ -176,10 +202,10 @@ const TechIconItem = ({ icon }: { icon: typeof TechIcons[0] }) => {
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="transition-all duration-150 transform hover:scale-125 cursor-pointer flex items-center justify-center p-2 rounded-xl relative group text-[#291C0E]"
+      className="transition-transform duration-150 transform hover:scale-125 cursor-pointer flex items-center justify-center p-2 rounded-xl relative group text-[#291C0E]"
       style={{
         opacity: isHovered ? 1 : 0.75,
-        filter: isHovered ? `drop-shadow(0 0 8px rgba(41, 28, 14, 0.2))` : 'none',
+        filter: isHovered ? 'drop-shadow(0 0 8px rgba(41, 28, 14, 0.2))' : 'none',
       }}
       title={icon.name}
     >
@@ -194,7 +220,7 @@ const LargeIconOnlyLoop = ({ direction = 'left' }: { direction?: 'left' | 'right
   return (
     <div className="w-full overflow-hidden py-4 sm:py-5 border-y border-[#291C0E]/20 my-3 select-none bg-[#291C0E]/[0.02]">
       <div className={`flex gap-16 sm:gap-20 items-center ${animClass} w-max`}>
-        {[...TechIcons, ...TechIcons, ...TechIcons, ...TechIcons].map((icon, idx) => (
+        {[...TechIcons, ...TechIcons].map((icon, idx) => (
           <TechIconItem key={`icon-loop-${direction}-${idx}`} icon={icon} />
         ))}
       </div>
@@ -223,7 +249,6 @@ const StaggeredProjectItem = ({ id, title, category, tech, index }: ProjectProps
       }}
     >
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative z-10">
-        
         <div className="flex items-baseline gap-4 sm:gap-8">
           <span
             className={`text-xs font-mono font-bold transition-all duration-300 ${
@@ -243,7 +268,6 @@ const StaggeredProjectItem = ({ id, title, category, tech, index }: ProjectProps
         </div>
 
         <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-space">
-          
           <span
             className={`font-serif-italic text-base sm:text-lg text-[#6E473B] transition-all duration-300 transform ${
               isHovered ? 'translate-y-0 opacity-100' : 'sm:-translate-y-1 opacity-80'
@@ -281,7 +305,6 @@ const StaggeredProjectItem = ({ id, title, category, tech, index }: ProjectProps
               →
             </div>
           </div>
-
         </div>
       </div>
 
@@ -317,11 +340,13 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#D8CCC4] text-[#291C0E] font-space relative overflow-x-hidden selection:bg-[#291C0E] selection:text-[#D8CCC4] flex flex-col justify-between p-4 sm:p-8 lg:p-12">
+    <div
+      className={`min-h-screen bg-[#D8CCC4] text-[#291C0E] selection:bg-[#291C0E] selection:text-[#D8CCC4] flex flex-col justify-between p-4 sm:p-8 lg:p-12 relative overflow-x-hidden ${bebasNeue.variable} ${instrumentSerif.variable} ${spaceGrotesk.variable} font-space`}
+    >
       <EditorialStyles />
 
-      {/* Background */}
-      <div className="bg-grain fixed inset-0 pointer-events-none z-50 opacity-60" />
+      {/* Background Noise Grid Ringan */}
+      <div className="bg-grain-optimized fixed inset-0 pointer-events-none z-50 opacity-40" />
 
       {/* Top Header */}
       <header className="w-full flex justify-between items-start border-b border-[#291C0E]/20 pb-4 relative z-10 animate-reveal-1">
@@ -347,10 +372,8 @@ export default function Home() {
 
       {/* Main Content Area */}
       <main className="my-auto py-6 relative z-10 flex flex-col">
-
         {/* Hero Section */}
         <div className="relative">
-          {/* Subtitle tag */}
           <div className="animate-reveal-1 flex items-center gap-2 mb-2 text-xs font-mono uppercase text-[#6E473B]">
             <span className="opacity-60">DIGITAL DESIGN & CODE</span>
             <span className="h-px bg-[#6E473B]/40 flex-1 max-w-[60px]" />
@@ -359,14 +382,12 @@ export default function Home() {
             </span>
           </div>
 
-          {/* Giant Headline Part 1 */}
           <div className="animate-reveal-1 overflow-hidden">
             <h1 className="font-bebas text-[#6E473B] text-[18vw] leading-[0.78] font-black uppercase tracking-tighter block text-left">
               FULLSTACK
             </h1>
           </div>
 
-          {/* Giant Headline Part 2 */}
           <div className="animate-reveal-2 overflow-hidden -mt-[2vw]">
             <h2 className="font-bebas text-[#291C0E] text-[20vw] leading-[0.75] font-black uppercase tracking-tight block text-left">
               DEVELOPER
@@ -419,13 +440,10 @@ export default function Home() {
         <div className="animate-reveal-4 mt-6">
           <LargeIconOnlyLoop direction="right" />
         </div>
-
       </main>
 
       {/* Footer Section */}
       <footer className="w-full relative z-10 pt-6 border-t border-[#291C0E]/20 animate-reveal-4 flex flex-col gap-4">
-
-        {/* Micro Footer Credits */}
         <div className="flex flex-col sm:flex-row justify-between items-center text-[11px] font-mono uppercase opacity-75 gap-3 py-2">
           <div className="flex items-center gap-2">
             <span className="inline-block w-2 h-2 rounded-full bg-[#6E473B]" />
@@ -440,7 +458,6 @@ export default function Home() {
             </a>
           </div>
         </div>
-
       </footer>
 
       {/* Side Micro Specs */}
@@ -450,7 +467,6 @@ export default function Home() {
       <div className="hidden lg:block fixed right-3 top-1/2 -translate-y-1/2 writing-mode-vertical text-[10px] font-mono tracking-widest text-[#6E473B]/50 pointer-events-none z-10">
         Neque porro quisquam est qui dolorem ipsum quia dolor
       </div>
-
     </div>
   );
 }
