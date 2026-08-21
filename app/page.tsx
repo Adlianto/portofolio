@@ -450,10 +450,10 @@ export default function Home() {
             <span>© 2026 CREATIVE FRONTEND ARCHITECTURE</span>
           </div>
           <div className="flex gap-8 font-bold">
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="hover:text-[#6E473B] transition-colors">
+            <a href="https://github.com/Adlianto" target="_blank" rel="noreferrer" className="hover:text-[#6E473B] transition-colors">
               GITHUB
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-[#6E473B] transition-colors">
+            <a href="#" target="_blank" rel="noreferrer" className="hover:text-[#6E473B] transition-colors">
               LINKEDIN
             </a>
           </div>
