@@ -460,7 +460,6 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Side Micro Specs */}
       <div className="hidden lg:block fixed left-3 top-1/2 -translate-y-1/2 writing-mode-vertical rotate-180 text-[10px] font-mono tracking-widest text-[#6E473B]/50 pointer-events-none z-10">
         Neque porro quisquam est qui dolorem ipsum quia dolor
       </div>
