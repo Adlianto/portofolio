@@ -442,7 +442,7 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer Section */}
+      {/* Footer */}
       <footer className="w-full relative z-10 pt-6 border-t border-[#291C0E]/20 animate-reveal-4 flex flex-col gap-4">
         <div className="flex flex-col sm:flex-row justify-between items-center text-[11px] font-mono uppercase opacity-75 gap-3 py-2">
           <div className="flex items-center gap-2">
