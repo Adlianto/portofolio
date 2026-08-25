@@ -395,7 +395,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Dark Banner */}
+        {/* Banner */}
         <div className="animate-reveal-3 w-full bg-[#291C0E] text-[#E1D4C2] p-4 sm:p-6 my-4 relative overflow-hidden">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative z-10">
             <div className="flex items-center gap-4">
