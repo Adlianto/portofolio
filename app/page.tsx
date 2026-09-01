@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Bebas_Neue, Instrument_Serif, Space_Grotesk } from 'next/font/google';
+import Cursor from './Cursor';
 
 const bebasNeue = Bebas_Neue({
   weight: '400',
@@ -251,17 +252,15 @@ const StaggeredProjectItem = ({ id, title, category, tech, index }: ProjectProps
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 relative z-10">
         <div className="flex items-baseline gap-4 sm:gap-8">
           <span
-            className={`text-xs font-mono font-bold transition-all duration-300 ${
-              isHovered ? 'text-[#6E473B] translate-x-1' : 'text-[#291C0E]/60'
-            }`}
+            className={`text-xs font-mono font-bold transition-all duration-300 ${isHovered ? 'text-[#6E473B] translate-x-1' : 'text-[#291C0E]/60'
+              }`}
           >
             {id}
           </span>
 
           <h4
-            className={`font-bebas text-4xl sm:text-6xl lg:text-7xl tracking-tight transition-all duration-500 transform ${
-              isHovered ? 'text-[#6E473B] translate-x-3' : 'text-[#291C0E]'
-            }`}
+            className={`font-bebas text-4xl sm:text-6xl lg:text-7xl tracking-tight transition-all duration-500 transform ${isHovered ? 'text-[#6E473B] translate-x-3' : 'text-[#291C0E]'
+              }`}
           >
             {title}
           </h4>
@@ -269,9 +268,8 @@ const StaggeredProjectItem = ({ id, title, category, tech, index }: ProjectProps
 
         <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs font-space">
           <span
-            className={`font-serif-italic text-base sm:text-lg text-[#6E473B] transition-all duration-300 transform ${
-              isHovered ? 'translate-y-0 opacity-100' : 'sm:-translate-y-1 opacity-80'
-            }`}
+            className={`font-serif-italic text-base sm:text-lg text-[#6E473B] transition-all duration-300 transform ${isHovered ? 'translate-y-0 opacity-100' : 'sm:-translate-y-1 opacity-80'
+              }`}
           >
             {category}
           </span>
@@ -280,11 +278,10 @@ const StaggeredProjectItem = ({ id, title, category, tech, index }: ProjectProps
             {tech.map((t, idx) => (
               <span
                 key={t}
-                className={`font-mono text-[10px] uppercase border border-[#291C0E]/30 px-2 py-0.5 rounded-full transition-all duration-300 transform ${
-                  isHovered
+                className={`font-mono text-[10px] uppercase border border-[#291C0E]/30 px-2 py-0.5 rounded-full transition-all duration-300 transform ${isHovered
                     ? 'scale-100 opacity-100 bg-[#291C0E] text-[#E1D4C2]'
                     : 'scale-95 opacity-60 bg-transparent text-[#291C0E]'
-                }`}
+                  }`}
                 style={{
                   transitionDelay: `${idx * 60}ms`,
                 }}
@@ -296,11 +293,10 @@ const StaggeredProjectItem = ({ id, title, category, tech, index }: ProjectProps
 
           <div className="flex items-center gap-3">
             <div
-              className={`w-8 h-8 rounded-full border border-[#291C0E]/40 flex items-center justify-center font-bold text-sm transition-all duration-300 ${
-                isHovered
+              className={`w-8 h-8 rounded-full border border-[#291C0E]/40 flex items-center justify-center font-bold text-sm transition-all duration-300 ${isHovered
                   ? 'bg-[#6E473B] text-[#E1D4C2] border-[#6E473B] rotate-45 scale-110'
                   : 'bg-transparent text-[#291C0E]'
-              }`}
+                }`}
             >
               →
             </div>
@@ -309,9 +305,8 @@ const StaggeredProjectItem = ({ id, title, category, tech, index }: ProjectProps
       </div>
 
       <div
-        className={`absolute bottom-0 left-0 h-[2px] bg-[#6E473B] transition-all duration-500 ${
-          isHovered ? 'w-full' : 'w-0'
-        }`}
+        className={`absolute bottom-0 left-0 h-[2px] bg-[#6E473B] transition-all duration-500 ${isHovered ? 'w-full' : 'w-0'
+          }`}
       />
     </div>
   );
