@@ -448,9 +448,9 @@ export default function Home() {
             <a href="https://github.com/Adlianto" target="_blank" rel="noreferrer" className="hover:text-[#6E473B] transition-colors">
               GITHUB
             </a>
-            <a href="#" target="_blank" rel="noreferrer" className="hover:text-[#6E473B] transition-colors">
+            {/* <a href="#" target="_blank" rel="noreferrer" className="hover:text-[#6E473B] transition-colors">
               LINKEDIN
-            </a>
+            </a> */}
           </div>
         </div>
       </footer>
