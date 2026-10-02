@@ -1,148 +1,171 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export default function Cursor() {
-  const dotRef = useRef<HTMLDivElement>(null);
+  const [enabled, setEnabled] = useState(false);
   const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    let mouseX = -100;
-    let mouseY = -100;
-    let ringX = -100;
-    let ringY = -100;
+    // 1. Immediately abort on touchscreens, mobile devices, or headless Lighthouse environments
+    if (typeof window === 'undefined' || !window.matchMedia('(pointer: fine)').matches) {
+      return;
+    }
 
-    let velX = 0;
-    let velY = 0;
-    
-    let currentScale = 1;
-    let targetScale = 1;
-    let dotScale = 1;
-    let targetDotScale = 1;
-    let isHovered = false;
-    let isMouseDown = false;
+    let isDisposed = false;
+    let cleanupListeners: (() => void) | undefined;
 
-    const onMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-    };
+    const setupCursor = () => {
+      if (isDisposed) return;
+      setEnabled(true);
 
-    const onMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const isInteractive =
-        target.tagName === 'A' ||
-        target.tagName === 'BUTTON' ||
-        target.closest('a') !== null ||
-        target.closest('button') !== null ||
-        target.classList.contains('cursor-pointer') ||
-        window.getComputedStyle(target).cursor === 'pointer';
+      let mouseX = -100;
+      let mouseY = -100;
+      let ringX = -100;
+      let ringY = -100;
+      let velX = 0;
+      let velY = 0;
 
-      isHovered = isInteractive;
-    };
+      let currentScale = 1;
+      let targetScale = 1;
+      let isHovered = false;
+      let isMouseDown = false;
+      let isRunning = false;
+      let animationFrameId: number = 0;
 
-    const onMouseDown = () => {
-      isMouseDown = true;
-    };
-
-    const onMouseUp = () => {
-      isMouseDown = false;
-    };
-
-    let animationFrameId: number;
-
-    const render = () => {
-      // 1. Posisi Lerp untuk Ring Luar
-      const posLerp = 0.18;
-      velX = (mouseX - ringX) * posLerp;
-      velY = (mouseY - ringY) * posLerp;
-
-      ringX += velX;
-      ringY += velY;
-
-      const velocity = Math.sqrt(velX * velX + velY * velY);
-      const angle = Math.atan2(velY, velX) * (180 / Math.PI);
-
-      // 2. Tentukan target ukuran
-      if (isMouseDown) {
-        targetScale = isHovered ? 2.0 : 0.8;
-        targetDotScale = isHovered ? 0 : 0.6;
-      } else if (isHovered) {
-        targetScale = 2.4; // Ukuran saat membungkus button
-        targetDotScale = 0; // Titik tengah melebur halus
-      } else {
-        targetScale = 1; // Ukuran normal
-        targetDotScale = 1;
-      }
-
-      // 3. Easing Transisi Skala yang Sangat Lembut (Spring Feel)
-      const scaleLerp = 0.22;
-      currentScale += (targetScale - currentScale) * scaleLerp;
-      dotScale += (targetDotScale - dotScale) * scaleLerp;
-
-      // Peregangan saat gerak cepat (dinonaktifkan pas hover tombol)
-      const stretch = isHovered ? 0 : Math.min(velocity * 0.015, 0.4);
-
-      // Render Ring Luar
-      if (ringRef.current) {
-        ringRef.current.style.transform = `
-          translate3d(${ringX}px, ${ringY}px, 0) 
-          translate(-50%, -50%) 
-          rotate(${angle}deg) 
-          scale(${currentScale + stretch}, ${Math.max(currentScale - stretch * 0.5, 0.4)})
-        `;
-
-        if (isHovered) {
-          ringRef.current.style.borderColor = 'rgba(41, 28, 14, 0.6)';
-          ringRef.current.style.backgroundColor = 'rgba(41, 28, 14, 0.15)';
-        } else {
-          ringRef.current.style.borderColor = 'rgba(110, 71, 59, 0.4)';
-          ringRef.current.style.backgroundColor = 'rgba(110, 71, 59, 0.08)';
+      const startLoop = () => {
+        if (!isRunning) {
+          isRunning = true;
+          animationFrameId = requestAnimationFrame(render);
         }
-      }
+      };
 
-      // Render Titik Inti
-      if (dotRef.current) {
-        dotRef.current.style.transform = `
-          translate3d(${mouseX}px, ${mouseY}px, 0) 
-          translate(-50%, -50%) 
-          scale(${dotScale})
-        `;
-        dotRef.current.style.opacity = `${dotScale}`;
-      }
+      const onMouseMove = (e: MouseEvent) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+        startLoop();
+      };
 
-      animationFrameId = requestAnimationFrame(render);
+      const onMouseOver = (e: MouseEvent) => {
+        const target = e.target as HTMLElement | null;
+        if (!target) return;
+
+        const isInteractive =
+          target.tagName === 'A' ||
+          target.tagName === 'BUTTON' ||
+          target.closest('a, button, [role="button"]') !== null ||
+          target.classList.contains('cursor-pointer');
+
+        if (isInteractive !== isHovered) {
+          isHovered = isInteractive;
+          startLoop();
+        }
+      };
+
+      const onMouseDown = () => {
+        isMouseDown = true;
+        startLoop();
+      };
+
+      const onMouseUp = () => {
+        isMouseDown = false;
+        startLoop();
+      };
+
+      const render = () => {
+        const posLerp = 0.2;
+        velX = (mouseX - ringX) * posLerp;
+        velY = (mouseY - ringY) * posLerp;
+
+        ringX += velX;
+        ringY += velY;
+
+        const velocity = Math.hypot(velX, velY);
+        const angle = Math.atan2(velY, velX) * (180 / Math.PI);
+
+        if (isMouseDown) {
+          targetScale = isHovered ? 2.0 : 0.8;
+        } else if (isHovered) {
+          targetScale = 2.4;
+        } else {
+          targetScale = 1;
+        }
+
+        const scaleLerp = 0.25;
+        currentScale += (targetScale - currentScale) * scaleLerp;
+        const stretch = isHovered ? 0 : Math.min(velocity * 0.015, 0.4);
+
+        if (ringRef.current) {
+          ringRef.current.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) translate(-50%, -50%) rotate(${angle}deg) scale(${currentScale + stretch}, ${Math.max(currentScale - stretch * 0.5, 0.4)})`;
+
+          if (isHovered) {
+            ringRef.current.style.borderColor = 'var(--accent-vermilion)';
+            ringRef.current.style.backgroundColor = 'rgba(240, 77, 54, 0.12)';
+            ringRef.current.style.opacity = '0.9';
+          } else {
+            ringRef.current.style.borderColor = 'var(--border-strong)';
+            ringRef.current.style.backgroundColor = 'transparent';
+            ringRef.current.style.opacity = '0.45';
+          }
+        }
+
+        const isIdle =
+          velocity < 0.08 &&
+          Math.abs(currentScale - targetScale) < 0.01;
+
+        if (isIdle) {
+          isRunning = false;
+        } else {
+          animationFrameId = requestAnimationFrame(render);
+        }
+      };
+
+      window.addEventListener('mousemove', onMouseMove, { passive: true });
+      window.addEventListener('mouseover', onMouseOver, { passive: true });
+      window.addEventListener('mousedown', onMouseDown, { passive: true });
+      window.addEventListener('mouseup', onMouseUp, { passive: true });
+
+      cleanupListeners = () => {
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseover', onMouseOver);
+        window.removeEventListener('mousedown', onMouseDown);
+        window.removeEventListener('mouseup', onMouseUp);
+        cancelAnimationFrame(animationFrameId);
+      };
     };
 
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseover', onMouseOver);
-    window.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mouseup', onMouseUp);
-    animationFrameId = requestAnimationFrame(render);
-
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseover', onMouseOver);
-      window.removeEventListener('mousedown', onMouseDown);
-      window.removeEventListener('mouseup', onMouseUp);
-      cancelAnimationFrame(animationFrameId);
-    };
+    // 2. Defer initialization until browser idle to ensure 0ms impact on TBT
+    if ('requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(setupCursor, { timeout: 2000 });
+      return () => {
+        isDisposed = true;
+        window.cancelIdleCallback(idleId);
+        cleanupListeners?.();
+      };
+    } else {
+      const timer = setTimeout(setupCursor, 800);
+      return () => {
+        isDisposed = true;
+        clearTimeout(timer);
+        cleanupListeners?.();
+      };
+    }
   }, []);
 
+  if (!enabled) return null;
+
   return (
-    <>
-      <div
-        ref={ringRef}
-        className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full hidden md:block"
-        style={{
-          width: '34px',    
-          height: '34px',
-          borderWidth: '1.5px',
-          borderStyle: 'solid',
-          backdropFilter: 'blur(1px)',
-          willChange: 'transform, border-color, background-color',
-          transition: 'border-color 0.3s ease, background-color 0.3s ease',
-        }}
-      />
-    </>
+    <div
+      ref={ringRef}
+      className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full hidden md:block"
+      style={{
+        width: '34px',
+        height: '34px',
+        borderWidth: '1.5px',
+        borderStyle: 'solid',
+        willChange: 'transform',
+        transition: 'border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease',
+      }}
+    />
   );
 }
