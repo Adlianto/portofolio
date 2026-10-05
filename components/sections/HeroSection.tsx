@@ -72,23 +72,6 @@ export function HeroSection() {
             DEVELOPER
           </h2>
         </div>
-
-        {/* Editorial Micro-Spec Box */}
-        <div className="animate-reveal-2 mt-4 lg:mt-0 lg:absolute lg:right-0 lg:bottom-4 max-w-md border-t lg:border-l lg:border-t-0 border-border-hairline pt-3 lg:pt-0 lg:pl-6 text-ink-primary flex flex-col gap-2">
-          <p className="font-serif-italic text-base sm:text-lg leading-snug text-ink-primary">
-            &ldquo;Architecting high-performance web systems, scalable backend logic, and refined tactile interfaces.&rdquo;
-          </p>
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase text-ink-muted tracking-wider">
-            <span>LOC: JAKARTA, ID (GMT+7)</span>
-            <span className="opacity-40">/</span>
-            <span>STACK: LARAVEL · NEXT.JS · C++</span>
-            <span className="opacity-40">/</span>
-            <span className="text-ink-primary font-bold inline-flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-accent-vermilion" />
-              SPEC: PRODUCTION-READY
-            </span>
-          </div>
-        </div>
       </div>
 
       {/* Banner / Strategic Callout */}
