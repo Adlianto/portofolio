@@ -164,7 +164,7 @@ export function CatalogueIndexTabs() {
         </div>
       </TabsContent>
 
-      {/* TAB 4: CINEMA & RITUALS */}
+      {/* TAB 4 */}
       <TabsContent value="culture" className="mt-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {leisureCulture.map((item) => (
