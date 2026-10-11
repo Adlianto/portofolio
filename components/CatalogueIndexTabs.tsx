@@ -122,7 +122,7 @@ export function CatalogueIndexTabs() {
         </div>
       </TabsContent>
 
-      {/* TAB 3: SOUNDTRACK & VIBES */}
+      {/* TAB 3 */}
       <TabsContent value="sound" className="mt-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {soundVibes.map((vibe) => (
