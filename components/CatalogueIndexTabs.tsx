@@ -87,7 +87,7 @@ export function CatalogueIndexTabs() {
         </div>
       </TabsContent>
 
-      {/* TAB 2: DESK & GEAR */}
+      {/* TAB 2 */}
       <TabsContent value="gear" className="mt-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {deskGear.map((item) => (
