@@ -40,7 +40,7 @@ export function CatalogueIndexTabs() {
         </TabsTrigger>
       </TabsList>
 
-      {/* TAB 1: TOY EXPERIMENTS */}
+      {/* TAB 1 */}
       <TabsContent value="experiments" className="mt-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {toyExperiments.map((exp) => (
