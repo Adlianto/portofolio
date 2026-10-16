@@ -29,7 +29,6 @@ export function ThemeToggle({
     }
   };
 
-  // Prevent hydration mismatch during initial SSR
   if (!mounted) {
     return (
       <button
