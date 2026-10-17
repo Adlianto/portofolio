@@ -74,7 +74,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      {/* Banner / Strategic Callout */}
+      {/* Banner  */}
       <div
         id="capability"
         className="animate-reveal-3 w-full bg-surface-contrast text-surface-contrast-text border border-border-hairline p-5 sm:p-7 my-6 relative overflow-hidden transition-colors duration-200"
