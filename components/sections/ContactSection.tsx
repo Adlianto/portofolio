@@ -88,7 +88,7 @@ export function ContactSection() {
               />
             </div>
 
-            {/* Field: Email */}
+            {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="dispatch-email"
