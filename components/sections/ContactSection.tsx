@@ -107,7 +107,7 @@ export function ContactSection() {
               />
             </div>
 
-            {/* Field: Brief Message */}
+            {/* Brief Message */}
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="dispatch-message"
